@@ -1,0 +1,19 @@
+.card{ 
+    /* border: 1px solsid; */
+    margin: 10px 0;
+    border-radius: 15px;
+    background-color: #fff;
+    padding: 10px;
+    display: grid;
+}
+
+.card > div {
+    width: 20%;
+    height: 10px;
+    border-radius: 15px;
+}
+
+.card > p {
+    font-size: 20px;
+    font-weight: 500;
+}

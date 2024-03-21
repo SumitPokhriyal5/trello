@@ -57,7 +57,7 @@ const Board = () => {
           <BsThreeDots />
         </div>
         {todoTasks.map((task) => (
-          <Card key={task.id} task={task.title} color={task.color} />
+          <Card key={task.id} title={task.title} color={task.color} />
         ))}
         <div className="addTask" onClick={() => openModal("todo")}>
           <FaPlus />
@@ -70,7 +70,7 @@ const Board = () => {
           <BsThreeDots />
         </div>
         {inProgressTasks.map((task) => (
-          <Card key={task.id} task={task.title} color={task.color} />
+          <Card key={task.id} title={task.title} color={task.color} />
         ))}
         <div className="addTask" onClick={() => openModal("inProgress")}>
           <FaPlus />
@@ -83,7 +83,7 @@ const Board = () => {
           <BsThreeDots />
         </div>
         {reviewTasks.map((task) => (
-          <Card key={task.id} task={task.title} color={task.color} />
+          <Card key={task.id} title={task.title} color={task.color} />
         ))}
         <div className="addTask" onClick={() => openModal("review")}>
           <FaPlus />
@@ -96,7 +96,7 @@ const Board = () => {
           <BsThreeDots />
         </div>
         {doneTasks.map((task) => (
-          <Card key={task.id} task={task.title} color={task.color} />
+          <Card key={task.id} title={task.title} color={task.color} />
         ))}
         <div className="addTask" onClick={() => openModal("done")}>
           <FaPlus />
