@@ -5,6 +5,7 @@
     background-color: #fff;
     padding: 10px;
     display: grid;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .card > div:first-child {

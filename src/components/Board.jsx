@@ -74,7 +74,7 @@ const Board = () => {
                ref={provided.innerRef}
              >
                <div>
-               <h2>{status.charAt(0).toUpperCase() + status.slice(1)}</h2>
+               <h2>{status === "inProgress" ? "In Progress" : status.charAt(0).toUpperCase() + status.slice(1)}</h2>
                  <BsThreeDots />
                </div>
                {data
