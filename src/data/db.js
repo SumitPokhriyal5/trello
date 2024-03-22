@@ -1,4 +1,4 @@
-const data = [
+const initialData = [
     // Todo
     {
       id: 1,
@@ -107,5 +107,5 @@ const data = [
     },
   ];
   
-  export default data;
+  export default initialData;
   

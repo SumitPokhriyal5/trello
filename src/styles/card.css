@@ -7,12 +7,17 @@
     display: grid;
 }
 
-.card > div {
+.card > div:first-child {
     width: 20%;
     height: 10px;
     border-radius: 15px;
 }
-
+.card > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #6e6e6f;
+}
 .card > p {
     font-size: 20px;
     font-weight: 500;

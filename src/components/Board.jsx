@@ -1,13 +1,15 @@
 import Card from "./Card";
-import data from "../data/db";
+import initialData from "../data/db";
 import "../styles/board.css";
 import { BsThreeDots } from "react-icons/bs";
 import { FaPlus } from "react-icons/fa6";
 import { useEffect, useRef, useState } from "react";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 const Board = () => {
   const [showModal, setShowModal] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [selectedColumn, setSelectedColumn] = useState("");
+  const [data, setData] = useState(initialData);
   const modalRef = useRef(null);
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -44,65 +46,63 @@ const Board = () => {
     data.push(newTask);
     closeModal();
   };
-  const todoTasks = data.filter((task) => task.status === "todo");
-  const inProgressTasks = data.filter((task) => task.status === "inProgress");
-  const reviewTasks = data.filter((task) => task.status === "review");
-  const doneTasks = data.filter((task) => task.status === "done");
+  
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
 
+    const { source, destination } = result;
+
+    const movedTask = data.find(task => task.id.toString() === result.draggableId);
+    if (movedTask) {
+      movedTask.status = destination.droppableId;
+      const newData = data.filter(task => task.id.toString() !== result.draggableId);
+      newData.splice(destination.index, 0, movedTask);
+      setData(newData);
+    }
+  };
+
+  const statuses = ["todo", "inProgress", "review", "done"];
   return (
+    <DragDropContext onDragEnd={onDragEnd}>
     <div className="board">
-      <div className="column">
-        <div>
-          <h2>To Do</h2>
-          <BsThreeDots />
-        </div>
-        {todoTasks.map((task) => (
-          <Card key={task.id} title={task.title} color={task.color} />
+        {statuses.map((status) => (
+           <Droppable key={status} droppableId={status}>
+           {(provided) => (
+             <div
+               className="column"
+               {...provided.droppableProps}
+               ref={provided.innerRef}
+             >
+               <div>
+               <h2>{status.charAt(0).toUpperCase() + status.slice(1)}</h2>
+                 <BsThreeDots />
+               </div>
+               {data
+                 .filter((task) => task.status === status)
+                 .map((task, index) => (
+                   <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
+                     {(provided) => (
+                       <div
+                         ref={provided.innerRef}
+                         {...provided.draggableProps}
+                         {...provided.dragHandleProps}
+                       >
+                         <Card title={task.title} color={task.color} />
+                       </div>
+                     )}
+                   </Draggable>
+                 ))}
+               {provided.placeholder}
+               <div className="addTask" onClick={() => openModal(status)}>
+                 <FaPlus />
+                 <span>Add a card</span>
+               </div>
+             </div>
+           )}
+         </Droppable>
         ))}
-        <div className="addTask" onClick={() => openModal("todo")}>
-          <FaPlus />
-          <span>Add a card</span>
-        </div>
-      </div>
-      <div className="column">
-        <div>
-          <h2>In Progress</h2>
-          <BsThreeDots />
-        </div>
-        {inProgressTasks.map((task) => (
-          <Card key={task.id} title={task.title} color={task.color} />
-        ))}
-        <div className="addTask" onClick={() => openModal("inProgress")}>
-          <FaPlus />
-          <span>Add a card</span>
-        </div>
-      </div>
-      <div className="column">
-        <div>
-          <h2>Review</h2>
-          <BsThreeDots />
-        </div>
-        {reviewTasks.map((task) => (
-          <Card key={task.id} title={task.title} color={task.color} />
-        ))}
-        <div className="addTask" onClick={() => openModal("review")}>
-          <FaPlus />
-          <span>Add a card</span>
-        </div>
-      </div>
-      <div className="column">
-        <div>
-          <h2>Done</h2>
-          <BsThreeDots />
-        </div>
-        {doneTasks.map((task) => (
-          <Card key={task.id} title={task.title} color={task.color} />
-        ))}
-        <div className="addTask" onClick={() => openModal("done")}>
-          <FaPlus />
-          <span>Add a card</span>
-        </div>
-      </div>
+       
+    
       {showModal && (
         <div className="modal">
           <div ref={modalRef} className="modal-content">
@@ -114,12 +114,13 @@ const Board = () => {
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
               placeholder="Enter task title"
-            />
+              />
             <button onClick={handleAddTask}>Add Task</button>
           </div>
         </div>
       )}
     </div>
+    </DragDropContext>
   );
 };
 
